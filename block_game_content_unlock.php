@@ -28,7 +28,7 @@ class block_game_content_unlock extends block_base
 
     public function has_config()
 	{
-        return false;
+        return true;
     }
 }
 
