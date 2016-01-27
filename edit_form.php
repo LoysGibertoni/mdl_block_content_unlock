@@ -12,6 +12,14 @@ class block_game_content_unlock_edit_form extends block_edit_form
 		{
 			$mform->addElement('header', 'configheader', get_string('unlocksystemeditpage', 'block_game_content_unlock'));
 			
+			$mform->addElement('text', 'config_title', 'Título do bloco');
+			$mform->setType('config_title', PARAM_TEXT);
+			
+			$mform->addElement('select', 'config_lastunlocksnumber', 'Número de últimas pontuações exibidas', array(0, 1, 2, 3, 4, 5, 6), null);
+			$mform->addRule('config_lastunlocksnumber', null, 'required', null, 'client');
+			$mform->setDefault('config_lastunlocksnumber', 1);
+			$mform->setType('config_lastunlocksnumber', PARAM_TEXT);
+			
 			$eventslist = report_eventlist_list_generator::get_non_core_event_list();
 			$eventsarray = array();
 			foreach($eventslist as $value)
