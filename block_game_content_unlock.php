@@ -18,7 +18,9 @@ class block_game_content_unlock extends block_base
     }
 	
     public function get_content()
-	{
+	{		
+		global $DB;
+		
 		$this->content = new stdClass;
 		$this->content->text = 'Sistema de desbloqueio de conteúdo';
 		$this->content->footer = 'Teste';

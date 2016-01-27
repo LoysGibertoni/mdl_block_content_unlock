@@ -2,7 +2,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2016012015;
+$plugin->version   = 2016012700;
 $plugin->requires  = 2011120511;
 $plugin->release   = 'Version for Moodle 2.9 onwards';
 $plugin->component = 'block_game_content_unlock';
