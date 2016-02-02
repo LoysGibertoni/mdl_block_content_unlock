@@ -75,7 +75,7 @@ class block_game_content_unlock_helper
 			
 			if($unlocksystem->coursemodulevisibility == 1)
 			{
-				set_section_visible($event->courseid, $ccm[1]->section, true);
+				set_section_visible($event->courseid, $ccm[1]->sectionnum, 1);
 			}
 			set_coursemodule_visible($unlocksystem->coursemoduleid, $unlocksystem->coursemodulevisibility);
 			
