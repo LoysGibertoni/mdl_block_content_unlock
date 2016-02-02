@@ -46,6 +46,10 @@ class block_game_content_unlock_edit_form extends moodleform
 		$mform->addRule('coursemodule', null, 'required', null, 'client');
 		$select->setSelected($unlocksystem->coursemoduleid);
 		
+		$mform->addElement('select', 'coursemodulevisibility', 'Visibilidade', array(0 => 'Ocultar', 1 => 'Mostrar'), null);
+		$mform->addRule('coursemodulevisibility', null, 'required', null, 'client');
+		$select->setSelected($unlocksystem->coursemodulevisibility);
+		
 		$mform->addElement('hidden', 'courseid');
 		$mform->addElement('hidden', 'unlocksystemid');
 		

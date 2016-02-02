@@ -73,7 +73,11 @@ class block_game_content_unlock_helper
 			$record->unlocksystemid = $unlocksystem->id;
 			$DB->insert_record('content_unlock_log', $record);
 			
-			set_coursemodule_visible($unlocksystem->coursemoduleid, 1);
+			if($unlocksystem->coursemodulevisibility == 1)
+			{
+				set_section_visible($event->courseid, $ccm[1]->section, true);
+			}
+			set_coursemodule_visible($unlocksystem->coursemoduleid, $unlocksystem->coursemodulevisibility);
 			
 		}
     }

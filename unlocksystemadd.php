@@ -39,6 +39,7 @@ else if($data = $addform->get_data())
 {
 	$record = new stdClass();
 	$record->coursemoduleid = $data->coursemodule;
+	$record->coursemodulevisibility = $data->coursemodulevisibility;
 	$record->conditions = $data->event;
 	$record->eventdescription = empty($data->description) ? null : $data->description;
 	$record->blockinstanceid = $blockid;
@@ -49,7 +50,8 @@ else if($data = $addform->get_data())
 	$record->processorid = $USER->id;
 	$DB->insert_record('content_unlock_processor', $record);
 	
-	set_coursemodule_visible($data->coursemodule, 0);
+	$visibility = $data->coursemodulevisibility == 0 ? 1 : 0;
+	set_coursemodule_visible($data->coursemodule, $visibility);
 	
     $url = new moodle_url('/my/index.php');
     redirect($url);

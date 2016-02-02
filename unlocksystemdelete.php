@@ -37,14 +37,15 @@ if($deleteform->is_cancelled())
 }
 else if($data = $deleteform->get_data())
 {
-	$oldpointsystem = $DB->get_record('content_unlock_system', array('id' => $unlocksystemid));
+	$oldunlocksystem = $DB->get_record('content_unlock_system', array('id' => $unlocksystemid));
 	
 	$record = new stdClass();
-	$record->id = $oldpointsystem->id;
-	$record->coursemoduleid = $oldpointsystem->coursemoduleid;
-	$record->conditions = $oldpointsystem->conditions;
-	$record->eventdescription = $oldpointsystem->eventdescription;
-	$record->blockinstanceid = $oldpointsystem->blockinstanceid;
+	$record->id = $oldunlocksystem->id;
+	$record->coursemoduleid = $oldunlocksystem->coursemoduleid;
+	$record->coursemodulevisibility = $oldunlocksystem->coursemodulevisibility;
+	$record->conditions = $oldunlocksystem->conditions;
+	$record->eventdescription = $oldunlocksystem->eventdescription;
+	$record->blockinstanceid = $oldunlocksystem->blockinstanceid;
 	$record->deleted = 1;
 	$DB->update_record('content_unlock_system', $record);
 	
