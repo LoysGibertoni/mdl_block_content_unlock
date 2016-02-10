@@ -12,8 +12,8 @@ class block_game_content_unlock_helper
         if(!block_game_content_unlock_helper::is_student($event->userid)) {
             return;
         }
-				
-		$uss = $DB->get_records('content_unlock_system', array('conditions' => $event->eventname, 'deleted' => 0));
+		
+		$uss = $DB->get_records_sql("SELECT * FROM {content_unlock_system} WHERE deleted = ? AND ".$DB->sql_compare_text('conditions')." = ". $DB->sql_compare_text('?'), array('deleted' => 0, 'conditions' => $event->eventname));
 		foreach($uss as $unlocksystem)
 		{
 			$ccm = get_course_and_cm_from_cmid($unlocksystem->coursemoduleid);
