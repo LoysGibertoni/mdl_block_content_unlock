@@ -46,6 +46,7 @@ else if($data = $deleteform->get_data())
 	$record->conditions = $oldunlocksystem->conditions;
 	$record->eventdescription = $oldunlocksystem->eventdescription;
 	$record->blockinstanceid = $oldunlocksystem->blockinstanceid;
+	$record->restrictions = $oldunlocksystem->restrictions;
 	$record->deleted = 1;
 	$DB->update_record('content_unlock_system', $record);
 	

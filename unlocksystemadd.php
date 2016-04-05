@@ -43,6 +43,7 @@ else if($data = $addform->get_data())
 	$record->conditions = $data->event;
 	$record->eventdescription = empty($data->description) ? null : $data->description;
 	$record->blockinstanceid = $blockid;
+	$record->restrictions = empty($data->availabilityconditionsjson) ? null : $data->availabilityconditionsjson;
 	$usid = $DB->insert_record('content_unlock_system', $record);
 	
 	$record = new stdClass();

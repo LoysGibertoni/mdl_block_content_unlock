@@ -14,7 +14,7 @@ class block_game_content_unlock_edit_form extends moodleform
  
     function definition()
 	{
-		global $DB;
+		global $DB, $COURSE;
  
 		$unlocksystem = $DB->get_record('content_unlock_system', array('id' => $this->id));
  
@@ -49,6 +49,12 @@ class block_game_content_unlock_edit_form extends moodleform
 		$mform->addElement('select', 'coursemodulevisibility', 'Visibilidade', array(0 => 'Ocultar', 1 => 'Mostrar'), null);
 		$mform->addRule('coursemodulevisibility', null, 'required', null, 'client');
 		$select->setSelected($unlocksystem->coursemodulevisibility);
+		
+		// Restrictions
+		$mform->addElement('header', 'availabilityconditionsheader', get_string('restrictaccess', 'availability'));
+		$mform->addElement('textarea', 'availabilityconditionsjson', get_string('accessrestrictions', 'availability'));
+		$mform->setDefault('availabilityconditionsjson', $unlocksystem->restrictions);
+		\core_availability\frontend::include_all_javascript($COURSE, null);
 		
 		$mform->addElement('hidden', 'courseid');
 		$mform->addElement('hidden', 'unlocksystemid');

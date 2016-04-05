@@ -46,6 +46,7 @@ else if($data = $editform->get_data())
 	$record->conditions = $oldunlocksystem->conditions;
 	$record->eventdescription = $oldunlocksystem->eventdescription;
 	$record->blockinstanceid = $oldunlocksystem->blockinstanceid;
+	$record->restrictions = $oldunlocksystem->restrictions;
 	$record->deleted = 1;
 	$DB->update_record('content_unlock_system', $record);
 	
@@ -55,6 +56,7 @@ else if($data = $editform->get_data())
 	$record->conditions = $data->event;
 	$record->eventdescription = empty($data->description) ? null : $data->description;
 	$record->blockinstanceid = $oldunlocksystem->blockinstanceid;
+	$record->restrictions = empty($data->availabilityconditionsjson) ? null : $data->availabilityconditionsjson;
 	$usid = $DB->insert_record('content_unlock_system', $record);
 	
 	$record = new stdClass();
