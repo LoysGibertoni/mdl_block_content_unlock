@@ -41,7 +41,17 @@ class block_game_content_unlock_edit_form extends block_edit_form
 			$params['blockinstanceid'] = $this->block->instance->id;
 			$unlock_systems = $DB->get_records_sql($sql, $params);
 	
-			$html = '<table><tr><th>ID</th><th>Condições</th><th>Módulo</th><th>Visibilidade</th><th>Descrição</th><th>Editar</th><th>Remover</th></tr>';
+			$html = '<table>
+						<tr>
+							<th>ID</th>
+							<th>Condições</th>
+							<th>Módulo</th>
+							<th>Visibilidade</th>
+							<th>Descrição</th>
+							<th>Editar</th>
+							<th>Remover</th>
+						</tr>';
+			
 			foreach($unlock_systems as $value)
 			{
 				$urledit = new moodle_url('/blocks/game_content_unlock/unlocksystemedit.php', array('courseid' => $COURSE->id, 'unlocksystemid' => $value->id));
@@ -55,7 +65,15 @@ class block_game_content_unlock_edit_form extends block_edit_form
 				}
 				
 				$cm = $info->get_cm($value->coursemoduleid);
-				$html = $html . '<tr><td>' . $value->id . '</td><td>' . $eventsarray[$value->conditions] . '</td><td>' . $cm->name . '</td><td>' . $value->coursemodulevisibility . '</td><td>' . $value->eventdescription . '</td><td>' . html_writer::link($urledit, 'Editar') . '</td><td>' . html_writer::link($urlremove, 'Remover') . '</td></tr>';
+				$html = $html . '<tr>
+									<td>' . $value->id . '</td>
+									<td>' . $eventsarray[$value->conditions] . '</td>
+									<td>' . $cm->name . '</td>
+									<td>' . $value->coursemodulevisibility . '</td>
+									<td>' . $value->eventdescription . '</td>
+									<td>' . html_writer::link($urledit, 'Editar') . '</td>
+									<td>' . html_writer::link($urlremove, 'Remover') . '</td>
+								</tr>';
 			}
 			
 			$url = new moodle_url('/blocks/game_content_unlock/unlocksystemadd.php', array('blockid' => $this->block->instance->id, 'courseid' => $COURSE->id));

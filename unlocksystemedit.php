@@ -4,6 +4,7 @@ global $DB, $OUTPUT, $PAGE, $USER;
  
 require_once('../../config.php');
 require_once('block_game_content_unlock_edit_form.php');
+require_once($CFG->dirroot.'/group/lib.php');
  
 global $DB;
  
@@ -41,18 +42,13 @@ else if($data = $editform->get_data())
 	
 	$record = new stdClass();
 	$record->id = $oldunlocksystem->id;
-	$record->coursemoduleid = $oldunlocksystem->coursemoduleid;
-	$record->coursemodulevisibility = $oldunlocksystem->coursemodulevisibility;
-	$record->conditions = $oldunlocksystem->conditions;
-	$record->eventdescription = $oldunlocksystem->eventdescription;
-	$record->blockinstanceid = $oldunlocksystem->blockinstanceid;
-	$record->restrictions = $oldunlocksystem->restrictions;
 	$record->deleted = 1;
 	$DB->update_record('content_unlock_system', $record);
 	
 	$record = new stdClass();
 	$record->coursemoduleid = $data->coursemodule;
-	$record->coursemodulevisibility = $data->coursemodulevisibility;
+	$record->mode = $data->mode;
+	$record->coursemodulevisibility = empty($data->coursemodulevisibility) ? null : $data->coursemodulevisibility;
 	$record->conditions = $data->event;
 	$record->eventdescription = empty($data->description) ? null : $data->description;
 	$record->blockinstanceid = $oldunlocksystem->blockinstanceid;
@@ -64,8 +60,42 @@ else if($data = $editform->get_data())
 	$record->processorid = $USER->id;
 	$DB->insert_record('content_unlock_processor', $record);
 	
-	$visibility = $data->coursemodulevisibility == 0 ? 1 : 0;
-	set_coursemodule_visible($data->coursemodule, $visibility);
+	if($oldunlocksystem->mode == 1) // Undo old unlock system changes
+	{
+		groups_delete_group($oldunlocksystem->groupid);
+	}
+
+	if($data->mode == 0) // By visibility mode
+	{
+		$visibility = $data->coursemodulevisibility == 0 ? 1 : 0;
+		set_coursemodule_visible($data->coursemodule, $visibility);
+	}
+	else // By group mode
+	{
+		$group_data = new stdClass();
+		$group_data->name = 'us' . $usid;
+		$group_data->courseid = $courseid;
+		$groupid = groups_create_group($group_data);
+
+		$record = new stdClass();
+		$record->id = $usid;
+		$record->groupid = $groupid;
+		$DB->update_record('content_unlock_system', $record);
+
+		$availability = $DB->get_field('course_modules', 'availability', array('id' => $data->coursemodule));
+		$record = new stdClass();
+		$record->id = $data->coursemodule;
+		if($availability)
+		{
+			$record->availability = '{"op":"&","c":[' . $availability . ', {"type":"group","id":' . $groupid . '}],"showc":[true,false]}';
+		}
+		else
+		{
+			$record->availability = '{"op":"&","c":[{"type":"group","id":' . $groupid . '}],"showc":[false]}';
+		}
+		$DB->update_record('course_modules', $record);
+		rebuild_course_cache($courseid);
+	}
 	
     $url = new moodle_url('/my/index.php');
     redirect($url);

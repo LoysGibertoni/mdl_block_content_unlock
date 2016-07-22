@@ -4,6 +4,7 @@ global $DB, $OUTPUT, $PAGE, $USER;
  
 require_once('../../config.php');
 require_once('block_game_content_unlock_delete_form.php');
+require_once($CFG->dirroot.'/group/lib.php');
  
 global $DB;
  
@@ -41,15 +42,14 @@ else if($data = $deleteform->get_data())
 	
 	$record = new stdClass();
 	$record->id = $oldunlocksystem->id;
-	$record->coursemoduleid = $oldunlocksystem->coursemoduleid;
-	$record->coursemodulevisibility = $oldunlocksystem->coursemodulevisibility;
-	$record->conditions = $oldunlocksystem->conditions;
-	$record->eventdescription = $oldunlocksystem->eventdescription;
-	$record->blockinstanceid = $oldunlocksystem->blockinstanceid;
-	$record->restrictions = $oldunlocksystem->restrictions;
 	$record->deleted = 1;
 	$DB->update_record('content_unlock_system', $record);
 	
+	if($oldunlocksystem->mode == 1) // Undo old unlock system changes
+	{
+		groups_delete_group($oldunlocksystem->groupid);
+	}
+
     $url = new moodle_url('/my/index.php');
     redirect($url);
 }

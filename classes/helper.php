@@ -3,6 +3,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/availability/tests/fixtures/mock_info.php');
+require_once($CFG->dirroot.'/group/lib.php');
 
 class block_game_content_unlock_helper
 {
@@ -85,7 +86,7 @@ class block_game_content_unlock_helper
 			$params['anonymous'] = $event->anonymous;
 			$params['timecreated'] = $event->timecreated;
 
-			$logid = $reader->get_events_select($selectwhere, $params);
+			$logid = $reader->get_events_select($selectwhere, $params, '', 0, 0);
 			$logid = array_keys($logid)[0];
 			
 			$record = new stdClass();
@@ -93,12 +94,18 @@ class block_game_content_unlock_helper
 			$record->unlocksystemid = $unlocksystem->id;
 			$DB->insert_record('content_unlock_log', $record);
 			
-			if($unlocksystem->coursemodulevisibility == 1)
+			if($unlocksystem->mode == 0) // By visibility mode
 			{
-				set_section_visible($event->courseid, $ccm[1]->sectionnum, 1);
+				if($unlocksystem->coursemodulevisibility == 1)
+				{
+					set_section_visible($event->courseid, $ccm[1]->sectionnum, 1);
+				}
+				set_coursemodule_visible($unlocksystem->coursemoduleid, $unlocksystem->coursemodulevisibility);
 			}
-			set_coursemodule_visible($unlocksystem->coursemoduleid, $unlocksystem->coursemodulevisibility);
-			
+			else // By group mode
+			{
+				groups_add_member($unlocksystem->groupid, $event->userid);
+			}
 		}
     }
 	

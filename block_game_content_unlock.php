@@ -43,22 +43,7 @@ class block_game_content_unlock extends block_base
 					$eventsarray[$value['eventname']] = $description[0];
 				}
 				
-				$us = null;
-				if(is_null($this->page->cm->modname))
-				{
-					$us = $DB->get_records('content_unlock_system', array('deleted' => 0, 'blockinstanceid' => $this->instance->id));
-				}
-				else
-				{
-					$sql = "SELECT *
-					FROM
-						{content_unlock_system} u
-					WHERE u.deleted = 0
-						AND u.blockinstanceid = " . $this->instance->id . "
-						AND u.conditions LIKE '%" . $this->page->cm->modname . "%'";
-					
-					$us = $DB->get_records_sql($sql);
-				}
+				$us = $DB->get_records('content_unlock_system', array('deleted' => 0, 'blockinstanceid' => $this->instance->id));
 				if(!empty($us))
 				{
 					$unlocklist = '';

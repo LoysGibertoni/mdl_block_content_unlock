@@ -13,7 +13,9 @@ class block_game_content_unlock_delete_form extends moodleform
 		$mform->addElement('html', get_string('unlocksystemdeletemessage', 'block_game_content_unlock'));
 		
 		$mform->addElement('hidden', 'courseid');
+		$mform->setType('courseid', PARAM_INT);
 		$mform->addElement('hidden', 'unlocksystemid');
+		$mform->setType('unlocksystemid', PARAM_INT);
 		
 		$this->add_action_buttons(true, 'Salvar alterações');
     }
