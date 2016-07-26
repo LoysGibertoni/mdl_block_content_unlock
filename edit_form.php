@@ -48,12 +48,14 @@ class block_game_content_unlock_edit_form extends block_edit_form
 							<th>Módulo</th>
 							<th>Visibilidade</th>
 							<th>Descrição</th>
+							<th>Gerenciar condições</th>
 							<th>Editar</th>
 							<th>Remover</th>
 						</tr>';
 			
 			foreach($unlock_systems as $value)
 			{
+				$condition_manage_url = new moodle_url('/blocks/game_content_unlock/conditionmanage.php', array('courseid' => $COURSE->id, 'unlocksystemid' => $value->id));
 				$urledit = new moodle_url('/blocks/game_content_unlock/unlocksystemedit.php', array('courseid' => $COURSE->id, 'unlocksystemid' => $value->id));
 				$urlremove = new moodle_url('/blocks/game_content_unlock/unlocksystemdelete.php', array('courseid' => $COURSE->id, 'unlocksystemid' => $value->id));
 				
@@ -71,6 +73,7 @@ class block_game_content_unlock_edit_form extends block_edit_form
 									<td>' . $cm->name . '</td>
 									<td>' . $value->coursemodulevisibility . '</td>
 									<td>' . $value->eventdescription . '</td>
+									<td>' . html_writer::link($condition_manage_url, 'Gerenciar condições') . '</td>
 									<td>' . html_writer::link($urledit, 'Editar') . '</td>
 									<td>' . html_writer::link($urlremove, 'Remover') . '</td>
 								</tr>';

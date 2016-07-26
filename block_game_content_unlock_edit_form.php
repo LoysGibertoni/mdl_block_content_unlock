@@ -1,7 +1,8 @@
 <?php
 
 require_once("{$CFG->libdir}/formslib.php");
- 
+require_once($CFG->dirroot . '/blocks/game_content_unlock/lib.php');
+
 class block_game_content_unlock_edit_form extends moodleform
 {
  
@@ -21,13 +22,7 @@ class block_game_content_unlock_edit_form extends moodleform
         $mform =& $this->_form;
         $mform->addElement('header','displayinfo', get_string('unlocksystemeditheading', 'block_game_content_unlock'));
 
-		$eventslist = report_eventlist_list_generator::get_non_core_event_list();
-		$eventsarray = array();
-		foreach($eventslist as $value)
-		{
-			$description = explode("\\", explode(".", strip_tags($value['fulleventname']))[0]);
-			$eventsarray[$value['eventname']] = $description[0] . " (" . $value['eventname'] . ")";
-		}
+		$eventsarray = content_unlock_generate_events_list();
 		$select = $mform->addElement('select', 'event', 'Evento', $eventsarray, null);
 		$mform->addRule('event', null, 'required', null, 'client');
 		$mform->setType('event', PARAM_TEXT);
@@ -60,13 +55,6 @@ class block_game_content_unlock_edit_form extends moodleform
 		$mform->setType('coursemodulevisibility', PARAM_INT);
 		$mform->disabledIf('coursemodulevisibility', 'mode', 'neq', 0);
 		$select->setSelected($unlocksystem->coursemodulevisibility);
-		
-		// Restrictions
-		$mform->addElement('header', 'availabilityconditionsheader', get_string('restrictaccess', 'availability'));
-		$mform->addElement('textarea', 'availabilityconditionsjson', get_string('accessrestrictions', 'availability'));
-		$mform->setDefault('availabilityconditionsjson', $unlocksystem->restrictions);
-		\core_availability\frontend::include_all_javascript($COURSE, null);
-		$mform->setType('availabilityconditionsjson', PARAM_TEXT);
 		
 		$mform->addElement('hidden', 'courseid');
 		$mform->setType('courseid', PARAM_INT);

@@ -2,8 +2,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/availability/tests/fixtures/mock_info.php');
-require_once($CFG->dirroot.'/group/lib.php');
+require_once($CFG->dirroot . '/blocks/game_content_unlock/lib.php');
+require_once($CFG->dirroot . '/group/lib.php');
+require_once('event/content_unlocked.php');
 
 class block_game_content_unlock_helper
 {
@@ -12,6 +13,8 @@ class block_game_content_unlock_helper
 	{
 		global $DB;
 		
+		$unlocked_content = false;
+
         if(!block_game_content_unlock_helper::is_student($event->userid)) {
             return;
         }
@@ -25,7 +28,7 @@ class block_game_content_unlock_helper
 				continue;
 			}
 			
-			if(!block_game_content_unlock_helper::is_available($unlocksystem->restrictions, $event->courseid, $event->userid))
+			if(!(content_unlock_satisfies_conditions($unlocksystem->restrictions, $event->courseid, $event->userid) && content_unlock_satisfies_block_conditions($unlocksystem, $event->courseid, $event->userid)))
 			{
 				continue;
 			}
@@ -93,7 +96,8 @@ class block_game_content_unlock_helper
 			$record->logid = $logid;
 			$record->unlocksystemid = $unlocksystem->id;
 			$DB->insert_record('content_unlock_log', $record);
-			
+			$unlocked_content = true;
+
 			if($unlocksystem->mode == 0) // By visibility mode
 			{
 				if($unlocksystem->coursemodulevisibility == 1)
@@ -107,23 +111,16 @@ class block_game_content_unlock_helper
 				groups_add_member($unlocksystem->groupid, $event->userid);
 			}
 		}
-    }
-	
-	private static function is_available($restrictions, $courseid, $userid)
-	{
-		global $DB;
-		
-		if(isset($restrictions))
+
+		if($unlocked_content)
 		{
-			$tree = new \core_availability\tree(json_decode($restrictions));
-			$course = $DB->get_record('course', array('id' => $courseid));
-			$info = new \core_availability\mock_info($course, $userid);
-			$result = $tree->check_available(false, $info, true, $userid);
-			return $result->is_available();
+			$params = array(
+				'context' => $context
+			);
+			$event = \block_game_content_unlock\event\content_unlocked::create($params);
+			$event->trigger();
 		}
-		
-		return true;
-	}
+    }
 	
     protected static function is_student($userid) {
         return user_has_role_assignment($userid, 5);
