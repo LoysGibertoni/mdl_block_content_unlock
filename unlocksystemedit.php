@@ -60,6 +60,14 @@ else if($data = $editform->get_data())
 	$record->processorid = $USER->id;
 	$DB->insert_record('content_unlock_processor', $record);
 	
+	$unlock_conditions = $DB->get_records('content_unlock_condition', array('unlocksystemid' => $oldunlocksystem->id));
+	foreach($unlock_conditions as $unlock_condition)
+	{
+		unset($unlock_condition->id);
+		$unlock_condition->unlocksystemid = $usid;
+		$DB->insert_record('content_unlock_condition', $unlock_condition);
+	}
+
 	if($oldunlocksystem->mode == 1) // Undo old unlock system changes
 	{
 		groups_delete_group($oldunlocksystem->groupid);
