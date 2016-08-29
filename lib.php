@@ -70,6 +70,8 @@ function content_unlock_get_block_conditions_text($unlock_system)
 			{
 				$block_instance_id = $DB->get_field('points_system', 'blockinstanceid', array('id' => $unlock_system_block_condition->prpointsystemid));
 				$block_info = $DB->get_record('block_instances', array('id' => $block_instance_id));
+
+				$points_system_name = $DB->get_field('points_system', 'name', array('id' => $unlock_system_block_condition->prpointsystemid));
 			}
 			else
 			{
@@ -77,7 +79,7 @@ function content_unlock_get_block_conditions_text($unlock_system)
 			}
 			$instance = block_instance('game_points', $block_info);
 			
-			$conditions_text[] = get_string('block_conditions_reach', 'block_game_content_unlock') . ' ' . $unlock_system_block_condition->prpoints . ' ' . get_string('block_conditions_points', 'block_game_content_unlock') . ' (' . ($unlock_system_block_condition->prgrupal ? get_string('block_conditions_grupal', 'block_game_content_unlock') : get_string('block_conditions_individual', 'block_game_content_unlock')) . ') ' . get_string('block_conditions_on', 'block_game_content_unlock') . ' ' . (isset($unlock_system_block_condition->prblockid) ? get_string('block_conditions_block', 'block_game_content_unlock') . ' ' . $instance->title  : get_string('block_conditions_pointsystem', 'block_game_content_unlock') . ' ' . $unlock_system_block_condition->prpointsystemid . ' (' . get_string('block_conditions_block', 'block_game_content_unlock') . ' ' . $instance->title . ')' );
+			$conditions_text[] = get_string('block_conditions_reach', 'block_game_content_unlock') . ' ' . $unlock_system_block_condition->prpoints . ' ' . get_string('block_conditions_points', 'block_game_content_unlock') . ' (' . ($unlock_system_block_condition->prgrupal ? get_string('block_conditions_grupal', 'block_game_content_unlock') : get_string('block_conditions_individual', 'block_game_content_unlock')) . ') ' . get_string('block_conditions_on', 'block_game_content_unlock') . ' ' . (isset($unlock_system_block_condition->prblockid) ? get_string('block_conditions_block', 'block_game_content_unlock') . ' ' . $instance->title  : get_string('block_conditions_pointsystem', 'block_game_content_unlock') . ' ' . (empty($points_system_name) ? $unlock_system_block_condition->prpointsystemid : $points_system_name . ' (' . $unlock_system_block_condition->prpointsystemid . ')') . ' (' . get_string('block_conditions_block', 'block_game_content_unlock') . ' ' . $instance->title . ')' );
 		}
 		else if($unlock_system_block_condition->type == 1) // By content unlock
 		{

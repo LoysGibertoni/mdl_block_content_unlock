@@ -41,7 +41,7 @@ class block_game_content_unlock_helper
 			
 			$blockcontext = context::instance_by_id($blockcontextid);
 			$context = context::instance_by_id($event->contextid);
-			if(strpos($context->path, $blockcontext->path) !== 0) // Se o o contexto atual não estiver na hierarquia do contexto do bloco
+			if(strpos($context->path, $blockcontext->path) !== 0 && $blockcontext->instanceid != SITEID) // Se o o contexto atual não estiver na hierarquia do contexto do bloco
 			{
 				continue;
 			}
