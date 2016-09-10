@@ -28,7 +28,7 @@ class block_game_content_unlock_helper
 				continue;
 			}
 			
-			if(!(content_unlock_satisfies_conditions($unlocksystem->restrictions, $event->courseid, $event->userid) && content_unlock_satisfies_block_conditions($unlocksystem, $event->courseid, $event->userid)))
+			if(!(content_unlock_satisfies_conditions($unlocksystem->restrictions, $event->courseid, $event->userid) && content_unlock_satisfies_advanced_conditions($unlocksystem, $event) && content_unlock_satisfies_block_conditions($unlocksystem, $event->courseid, $event->userid)))
 			{
 				continue;
 			}

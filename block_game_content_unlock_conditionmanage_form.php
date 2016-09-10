@@ -116,6 +116,49 @@ class block_game_content_unlock_conditionmanage_form extends moodleform
 		
 		$mform->addElement('html', $html);
  
+		// Advanced conditions
+		$mform->addElement('html', '<hr></hr>');
+
+		$advconnective = $DB->get_field('content_unlock_system', 'advconnective', array('id' => $this->unlocksystemid));
+		$select = $mform->addElement('select', 'advconnective', 'Conectivo de restrições avançadas', $connectives_array);
+		$mform->addRule('advconnective', null, 'required', null, 'client');
+		$select->setSelected($advconnective);
+ 
+		$html = '<table>
+					<tr>
+						<th>' . get_string('conditionmanagesql', 'block_game_content_unlock') . '</th>
+						<th>' . get_string('conditionmanagetrueif', 'block_game_content_unlock') . '</th>
+						<th>' . get_string('conditionmanagedelete', 'block_game_content_unlock') . '</th>
+					</tr>';
+		$conditions = $DB->get_records('content_unlock_advcondition', array('unlocksystemid' => $this->unlocksystemid));
+		foreach($conditions as $condition)
+		{
+			$url = new moodle_url('/blocks/game_content_unlock/advancedconditiondelete.php', array('conditionid' => $condition->id, 'courseid' => $COURSE->id));
+			
+			if($condition->trueif == 0)
+			{
+				$trueif = get_string('advancedconditionaddtrueifzero', 'block_game_content_unlock');
+			}
+			else if($condition->trueif == 1)
+			{
+				$trueif = get_string('advancedconditionaddtrueifnotzero', 'block_game_content_unlock');
+			}
+			else
+			{
+				$trueif = get_string('advancedconditionaddtrueifegthan', 'block_game_content_unlock') . ' ' . $condition->count;
+			}
+			
+			$html .= '<tr>
+					 	<td>' . get_string('advancedconditionaddselect', 'block_game_content_unlock') . ' ' . $condition->whereclause . '</td>
+						 <td>' . $trueif . '</td>
+						<td>' . html_writer::link($url, get_string('conditionmanagedelete', 'block_game_content_unlock')) . '</td>
+					 </tr>';
+		}
+		$url = new moodle_url('/blocks/game_content_unlock/advancedconditionadd.php', array('unlocksystemid' => $this->unlocksystemid, 'courseid' => $COURSE->id));
+		$html .= '</table>' . html_writer::link($url, get_string('conditionmanageadd', 'block_game_content_unlock'));
+
+		$mform->addElement('html', $html);
+
         $mform->addElement('hidden', 'unlocksystemid');
 		$mform->addElement('hidden', 'courseid');
 		

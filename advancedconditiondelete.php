@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
  
 /**
- * Content unlock system conditions management page.
+ * Delete unlock system advanced condition page.
  *
  * @package    block_game_content_unlock
  * @copyright  2016 Loys Henrique Saccomano Gibertoni
@@ -25,13 +25,11 @@
 global $DB, $OUTPUT, $PAGE, $USER;
  
 require_once('../../config.php');
-require_once('block_game_content_unlock_conditionmanage_form.php');
- 
-global $DB;
+require_once('block_game_content_unlock_advancedconditiondelete_form.php');
  
 // Required variables
 $courseid = required_param('courseid', PARAM_INT);
-$unlocksystemid = required_param('unlocksystemid', PARAM_INT);
+$conditionid = required_param('conditionid', PARAM_INT);
  
 // Optional variables
 $id = optional_param('id', 0, PARAM_INT);
@@ -42,43 +40,41 @@ if (!$course = $DB->get_record('course', array('id' => $courseid))) {
  
 require_login($course);
  
-$PAGE->set_url('/blocks/game_content_unlock/conditionmanage.php', array('id' => $courseid));
+$PAGE->set_url('/blocks/game_content_unlock/advancedconditiondelete.php', array('id' => $courseid));
 $PAGE->set_pagelayout('standard');
-$PAGE->set_heading(get_string('conditionmanageheader', 'block_game_content_unlock')); 
-$PAGE->set_title(get_string('conditionmanageheader', 'block_game_content_unlock')); 
+$PAGE->set_heading(get_string('advancedconditiondeleteheading', 'block_game_content_unlock')); 
+$PAGE->set_title(get_string('advancedconditiondeleteheading', 'block_game_content_unlock'));
 
 $settingsnode = $PAGE->settingsnav->add(get_string('configpage_nav', 'block_game_content_unlock'));
-$editurl = new moodle_url('/blocks/game_content_unlock/conditionmanage.php', array('id' => $id, 'courseid' => $courseid, 'unlocksystemid' => $unlocksystemid));
-$editnode = $settingsnode->add(get_string('conditionmanageheader', 'block_game_content_unlock'), $editurl);
+$editurl = new moodle_url('/blocks/game_content_unlock/advancedconditiondelete.php', array('id' => $id, 'courseid' => $courseid, 'conditionid' => $conditionid));
+$editnode = $settingsnode->add(get_string('advancedconditiondeleteheading', 'block_game_content_unlock'), $editurl);
 $editnode->make_active();
 
-$manageform = new block_game_content_unlock_conditionmanage_form($unlocksystemid);
-if($manageform->is_cancelled())
+$deleteform = new block_game_content_unlock_advancedconditiondelete_form();
+if($deleteform->is_cancelled())
 {
-	$url = new moodle_url('/course/view.php', array('id' => $courseid));
+	$usid = $DB->get_field('content_unlock_advcondition', 'unlocksystemid', array('id' => $conditionid));
+	
+    $url = new moodle_url('/blocks/game_content_unlock/conditionmanage.php', array('courseid' => $courseid, 'unlocksystemid' => $usid));
     redirect($url);
 }
-else if($data = $manageform->get_data())
+else if($data = $deleteform->get_data())
 {
-	$record = new stdClass();
-	$record->id = $unlocksystemid;
-	$record->restrictions = $data->availabilityconditionsjson;
-	$record->connective = $data->connective;
-	$record->advconnective = $data->advconnective;
+	$usid = $DB->get_field('content_unlock_advcondition', 'unlocksystemid', array('id' => $conditionid));
 	
-	$DB->update_record('content_unlock_system', $record);
+	$DB->delete_records('content_unlock_advcondition', array('id' => $conditionid));
 	
-	$url = new moodle_url('/course/view.php', array('id' => $courseid));
+    $url = new moodle_url('/blocks/game_content_unlock/conditionmanage.php', array('courseid' => $courseid, 'unlocksystemid' => $usid));
     redirect($url);
 }
 else
 {
-	$toform['unlocksystemid'] = $unlocksystemid;
+	$toform['conditionid'] = $conditionid;
 	$toform['courseid'] = $courseid;
-	$manageform->set_data($toform);
+	$deleteform->set_data($toform);
 	$site = get_site();
 	echo $OUTPUT->header();
-	$manageform->display();
+	$deleteform->display();
 	echo $OUTPUT->footer();
 }
 

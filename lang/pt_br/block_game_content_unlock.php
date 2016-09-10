@@ -41,6 +41,22 @@ $string['conditiondelete_header'] = 'Remoção de condição para desbloqueio de
 $string['conditiondelete_message'] = 'Tem certeza que deseja remover a condição?';
 $string['conditiondelete_button'] = 'Remover';
 
-$string['conditionmanage_header'] = 'Gerenciamento de condições para desbloqueio de conteúdo';
+$string['conditionmanageheader'] = 'Gerenciamento de condições para desbloqueio de conteúdo';
+$string['conditionmanagesql'] = 'SQL';
+$string['conditionmanagetrueif'] = 'Verdadeiro se';
+$string['conditionmanagedelete'] = 'Remover';
+$string['conditionmanageadd'] = 'Adicionar restrição avançada';
+
+$string['advancedconditionaddheading'] = 'Adicionar restrição avançada';
+$string['advancedconditionaddbutton'] = 'Adicionar';
+$string['advancedconditionaddselect'] = 'SELECT COUNT(*)';
+$string['advancedconditionaddtrueif'] = 'Verdadeiro se';
+$string['advancedconditionaddtrueifzero'] = 'COUNT = 0';
+$string['advancedconditionaddtrueifnotzero'] = 'COUNT >= 1';
+$string['advancedconditionaddtrueifegthan'] = 'COUNT >=';
+$string['advancedconditionaddcount'] = 'Contagem';
+$string['advancedconditiondeleteheading'] = 'Remover restrição';
+$string['advancedconditiondeletemessage'] = 'Tem certeza que deseja remover a restrição?';
+$string['advancedconditiondeletebutton'] = 'Remover';
 
 $string['event_content_unlocked'] = 'Conteúdo desbloqueado';
