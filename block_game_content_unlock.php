@@ -30,7 +30,8 @@ class block_game_content_unlock extends block_base
 		global $DB, $USER;
 		$this->content = new stdClass;
 		
-		$this->content->text = "<p>Não há debloqueios disponíveis no momento!</p>";
+		$this->content->text = '';
+		$this->content->footer = '';
 	
 		if(user_has_role_assignment($USER->id, 5))
 		{
